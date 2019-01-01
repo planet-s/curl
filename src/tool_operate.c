@@ -184,7 +184,7 @@ static curl_off_t VmsSpecialSize(const char *name,
 }
 #endif /* __VMS */
 
-#if 0 || \
+#if defined(HAVE_UTIME) || \
     (defined(WIN32) && (CURL_SIZEOF_CURL_OFF_T >= 8))
 static void setfiletime(long filetime, const char *filename,
                         FILE *error_stream)
@@ -231,7 +231,7 @@ static void setfiletime(long filetime, const char *filename,
               "CreateFile failed: GetLastError %u\n",
               filetime, GetLastError());
     }
-#elif 0
+#elif defined(HAVE_UTIME)
     struct utimbuf times;
     times.actime = (time_t)filetime;
     times.modtime = (time_t)filetime;
@@ -1816,7 +1816,7 @@ static CURLcode operate_do(struct GlobalConfig *global,
         }
 #endif
 
-#if 0 || \
+#if defined(HAVE_UTIME) || \
     (defined(WIN32) && (CURL_SIZEOF_CURL_OFF_T >= 8))
         /* File time can only be set _after_ the file has been closed */
         if(!result && config->remote_time && outs.s_isreg && outs.filename) {
